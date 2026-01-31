@@ -1,5 +1,5 @@
 import express from "express"
-import connection from "./database/dbConnection.js";
+// import connection from "./database/dbConnection.js" 
 
 const app = express();
 const port = 3000;
