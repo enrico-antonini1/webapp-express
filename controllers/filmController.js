@@ -31,6 +31,7 @@ function index(req, res, next) {
         // si può anche scrivere tutto dentro created_at:
         // created_at: DateTime.fromObject(film.created_at).toLocaleString(),
         updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
+        image: `${process.env.SERVER_URL}/images/${film.image}`
       };
     });
     res.json({
@@ -89,13 +90,14 @@ function show(req, res, next) {
 
         return {
           ...review,
-          created_at: DateTime.fromObject(film.created_at).toLocaleString(),
-          updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
-        };
+          created_at: DateTime.fromObject(review.created_at).toLocaleString(),
+          updated_at: DateTime.fromObject(review.updated_at).toLocaleString(),
+          };
       });
 
       const respObj = {
         ...film,
+        image: `${process.env.SERVER_URL}/images/${film.image}`,
         created_at: DateTime.fromObject(film.created_at).toLocaleString(),
         updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
         reviews: reviewsFormatted,
