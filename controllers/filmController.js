@@ -1,4 +1,7 @@
 import connection from "../database/dbConnection.js";
+import { DateTime } from "luxon";
+
+// INDEX
 
 function index(req, res, next) {
   // prova
@@ -11,11 +14,31 @@ function index(req, res, next) {
     if (err) return next(err);
     // test:
     // console.log(results)
+
+    // restituzione risultato base, senza formattazione dati
+    // res.json({
+    //   results,
+    // });
+
+    // restituzione risultato con formattazione dati
+    const filmsFormatted = results.map((film) => {
+      const data = film.created_at;
+      const dt = DateTime.fromObject(data);
+
+      return {
+        ...film,
+        created_at: dt.toLocaleString(),
+        // si può anche scrivere tutto dentro created_at:
+        // created_at: DateTime.fromObject(film.created_at).toLocaleString(),
+      };
+    });
     res.json({
-      results,
+      results: filmsFormatted,
     });
   });
 }
+
+// SHOW
 
 function show(req, res, next) {
   // prova
@@ -29,16 +52,16 @@ function show(req, res, next) {
   const filmQuery = "SELECT * FROM  movies WHERE id = ?";
 
   connection.query(filmQuery, [id], (err, results) => {
-    if(err) return next(err);
+    if (err) return next(err);
     // test:
     // console.log(results)
 
-    if(results.length === 0) {
-        res.status(404);
-        return res.json({
-            error: "NOT FOUND",
-            message: "Film non trovato",
-        });
+    if (results.length === 0) {
+      res.status(404);
+      return res.json({
+        error: "NOT FOUND",
+        message: "Film non trovato",
+      });
     }
 
     const film = results[0];
@@ -49,19 +72,39 @@ function show(req, res, next) {
     const reviewsQuery = "SELECT * FROM  movies WHERE id = ?";
 
     connection.query(reviewsQuery, [id], (err, results) => {
-        if(err) return next(err);
+      if (err) return next(err);
 
-        const respObj = {
-            ...film,
-            reviews: reviewsQuery
+      // restituzione risultato base, senza formattazione dati
+      // const respObj = {
+      //     ...film,
+      //     reviews: reviewsQuery
+      // };
+      // return res.json(respObj)
+      
+
+      // restituzione risultato con formattazione dati
+      const reviewsFormatted = results.map((review) => {
+        // const data = review.created_at;
+        // const dt = DateTime.fromObject(data);
+
+        return {
+          ...review,
+          created_at: DateTime.fromObject(film.created_at).toLocaleString(),
         };
+      });
 
-        return res.json(respObj)
-    })
-})
+      const respObj = {
+        ...film,
+        created_at: DateTime.fromObject(film.created_at).toLocaleString(),
+        reviews: reviewsFormatted,
+      };
+
+      return res.json(respObj);
+    });
+  });
 }
 
 export default {
   index,
   show,
-}
+};
