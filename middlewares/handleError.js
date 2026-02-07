@@ -11,3 +11,4 @@ fs.writeFileSync("logs/log.txt", `${time}: ${err}`);
     message: "Errore interno del server",
   });
 }
+
