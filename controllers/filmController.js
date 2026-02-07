@@ -31,7 +31,7 @@ function index(req, res, next) {
         // si può anche scrivere tutto dentro created_at:
         // created_at: DateTime.fromObject(film.created_at).toLocaleString(),
         updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
-        image: `${process.env.SERVER_URL}/images/${film.image}`
+        image: `${process.env.SERVER_URL}/images/${film.image}`,
       };
     });
     res.json({
@@ -51,7 +51,16 @@ function show(req, res, next) {
 
   // 1° query: query film
 
-  const filmQuery = "SELECT * FROM  movies WHERE id = ?";
+  // const filmQuery = "SELECT * FROM  movies WHERE id = ?";
+
+  // bonus: aggiungo media recensioni
+  const filmQuery = ` 
+  SELECT CAST(AVG(reviews.vote) AS FLOAT) AS average_vote
+  FROM  movies
+  LEFT JOIN reviews
+  ON movies.id = reviews.movie_id
+  WHERE movies.id = ?  
+  `;
 
   connection.query(filmQuery, [id], (err, results) => {
     if (err) return next(err);
@@ -92,7 +101,7 @@ function show(req, res, next) {
           ...review,
           created_at: DateTime.fromObject(review.created_at).toLocaleString(),
           updated_at: DateTime.fromObject(review.updated_at).toLocaleString(),
-          };
+        };
       });
 
       const respObj = {
