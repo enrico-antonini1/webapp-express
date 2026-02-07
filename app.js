@@ -1,13 +1,16 @@
 import express from "express"
 // import connection from "./database/dbConnection.js" 
 import handleError from "./middlewares/handleError.js";
+import filmRouter from "./routers/film.js"
 
 const app = express();
 const port = 3000;
 
 app.use(express.static("public"));
 
-app.get("/", (req, es) => {
+app.use("/api/film", filmRouter)
+
+app.get("/", (req, res) => {
     res.send("Rotta di prova")
 })
 
