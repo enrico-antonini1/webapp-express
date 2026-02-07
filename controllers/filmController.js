@@ -8,7 +8,16 @@ function index(req, res, next) {
   // res.json("prova index")
 
   // implementazione
-  const query = "SELECT * FROM  movies";
+  // const query = "SELECT * FROM  movies";
+
+   // bonus: aggiungo media recensioni
+   const query = `
+  SELECT movies.*, CAST(AVG(reviews.vote) AS FLOAT) AS average_vote
+  FROM  movies
+  LEFT JOIN reviews
+  ON movies.id = reviews.movie_id
+  GROUP BY movies.id  
+  `
 
   connection.query(query, (err, results) => {
     if (err) return next(err);
@@ -55,7 +64,7 @@ function show(req, res, next) {
 
   // bonus: aggiungo media recensioni
   const filmQuery = ` 
-  SELECT CAST(AVG(reviews.vote) AS FLOAT) AS average_vote
+  SELECT movies.*, CAST(AVG(reviews.vote) AS FLOAT) AS average_vote
   FROM  movies
   LEFT JOIN reviews
   ON movies.id = reviews.movie_id
