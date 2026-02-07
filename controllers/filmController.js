@@ -1,5 +1,6 @@
 import connection from "../database/dbConnection.js";
 import { DateTime } from "luxon";
+import dataFormatted from "../function/dataFormatted.js"
 
 // INDEX
 
@@ -39,7 +40,12 @@ function index(req, res, next) {
         created_at: dt.toLocaleString(),
         // si può anche scrivere tutto dentro created_at:
         // created_at: DateTime.fromObject(film.created_at).toLocaleString(),
-        updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
+
+        // updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
+
+        // si può portare fuori dal codice come funzione e riportare quando mi serve:
+        updated_at: dataFormatted(film.updated_at),
+        
         image: `${process.env.SERVER_URL}/images/${film.image}`,
       };
     });
@@ -108,16 +114,16 @@ function show(req, res, next) {
 
         return {
           ...review,
-          created_at: DateTime.fromObject(review.created_at).toLocaleString(),
-          updated_at: DateTime.fromObject(review.updated_at).toLocaleString(),
+          created_at: dataFormatted(review.created_at),
+          updated_at: dataFormatted(review.updated_at)
         };
       });
 
       const respObj = {
         ...film,
         image: `${process.env.SERVER_URL}/images/${film.image}`,
-        created_at: DateTime.fromObject(film.created_at).toLocaleString(),
-        updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
+        created_at: dataFormatted(film.created_at),
+        updated_at: dataFormatted(film.updated_at),
         reviews: reviewsFormatted,
       };
 
