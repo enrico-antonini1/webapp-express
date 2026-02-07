@@ -30,6 +30,7 @@ function index(req, res, next) {
         created_at: dt.toLocaleString(),
         // si può anche scrivere tutto dentro created_at:
         // created_at: DateTime.fromObject(film.created_at).toLocaleString(),
+        updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
       };
     });
     res.json({
@@ -80,7 +81,6 @@ function show(req, res, next) {
       //     reviews: reviewsQuery
       // };
       // return res.json(respObj)
-      
 
       // restituzione risultato con formattazione dati
       const reviewsFormatted = results.map((review) => {
@@ -90,12 +90,14 @@ function show(req, res, next) {
         return {
           ...review,
           created_at: DateTime.fromObject(film.created_at).toLocaleString(),
+          updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
         };
       });
 
       const respObj = {
         ...film,
         created_at: DateTime.fromObject(film.created_at).toLocaleString(),
+        updated_at: DateTime.fromObject(film.updated_at).toLocaleString(),
         reviews: reviewsFormatted,
       };
 
