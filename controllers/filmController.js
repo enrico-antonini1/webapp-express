@@ -46,7 +46,9 @@ function index(req, res, next) {
         // si può portare fuori dal codice come funzione e riportare quando mi serve:
         updated_at: dataFormatted(film.updated_at),
 
-        image: `${process.env.SERVER_URL}/images/${film.image}`,
+        image: film.image !== 0
+        ?`${process.env.SERVER_URL}/images/${film.image}`
+        : null,
       };
     });
     res.json({
